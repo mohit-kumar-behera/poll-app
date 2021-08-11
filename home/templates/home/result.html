@@ -1,0 +1,52 @@
+{%  extends 'user/base.html' %}
+
+{% load static %}
+
+{% block title %}
+	
+	<title>{{ question.question_text }}</title>
+
+{% endblock title %}
+
+{% block style %}
+	<link rel="stylesheet" type="text/css" href="/static/user/css/style.css?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="/static/user/css/home-style.css?{% now 'U' %}">
+{% endblock style %}
+
+{% block header %}
+	<div class="jumbotron-fluid main-theme-bg smaller-padding d-flex justify-content-between">
+		<h5 class="mt-1"><a href="{% url 'home:home' %}" class="white-color">QuickPoll</a></h5>
+		<div class="d-flex ml-2s">
+			<a href="{% url 'createPoll:createPoll' %}"><button class="btn btn-primary mr-2">Create Poll</button></a>
+			<a href="{% url 'userProfile:userProfile' %}"><button class="btn btn-outline-info ml-2" style="border-radius:50%"><i class="fa fa-user"></i></button></a>
+		</div>
+	</div>
+{% endblock header %}
+
+{% block content %}
+
+	<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded ">
+		<div class="poll-header p-2 rounded-top">
+			<h4 class="question">{{ question.question_text }}</h4>
+		</div>
+		<div class="poll-body pt-3 pl-2 pr-2">
+			{% for choice in question.choices_set.all %}
+				<div class="container poll-result rounded d-flex flex-column p-2 mb-3 shadow-sm">
+					<div class="d-flex justify-content-between">
+						<h5>{{ choice.choice }}</h5>
+						<h5 class="text-muted ml-2">{{ choice.votePercentage }}%</h5>
+					</div>
+					<div class="progress">
+					  	<div class="progress-bar" role="progressbar" style="width: {{ choice.votePercentage  }}%" aria-valuenow="{{ choice.votePercentage  }}" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+					<p class="text-muted font-weight-bolder">{{ choice.votes }} vote{{ choice.votes|pluralize }}</p>
+				</div>
+			{% endfor %}		
+		</div>
+		<div class="poll-footer p-2 d-flex justify-content-between rounded-bottom">
+			<small><a href="#">- <b>{{ question.pollBy }}</b></a></small>
+			<small class="text-muted"><b>{{ question.pub_date }}</b></small>
+		</div>
+	</div>
+
+{% endblock content %}

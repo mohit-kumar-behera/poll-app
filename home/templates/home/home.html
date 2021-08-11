@@ -1,0 +1,203 @@
+
+{%  extends 'user/base.html' %}
+
+{% load static %}
+
+{% block title %}
+	
+	<title>Home - QuickPoll</title>
+
+{% endblock title %}
+
+{% block style %}
+	<link rel="stylesheet" type="text/css" href="/static/user/css/style.css?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="/static/user/css/home-style.css?{% now 'U' %}">
+{% endblock style %}
+
+{% block header %}
+	<div class="jumbotron-fluid main-theme-bg smaller-padding d-flex justify-content-between">
+		<h5 class="mt-1"><a href="{% url 'home:home' %}" class="white-color">QuickPoll</a></h5>
+		<div class="d-flex ml-2s">
+			<a href="{% url 'createPoll:createPoll' %}"><button class="btn btn-primary mr-2">Create Poll</button></a>
+			<a href="{% url 'userProfile:userProfile' %}"><button class="btn btn-outline-info ml-2" style="border-radius:50%"><i class="fa fa-user"></i></button></a>
+		</div>
+	</div>
+{% endblock header %}
+
+{% block content %}
+
+	<div class="container p-2">
+		<div class="input-group mb-3 mt-3 w-65 mx-auto">
+		  <input type="text" class="form-control" id="searchPoll" placeholder="Search Polls">
+		</div>
+	</div>
+
+	<script>
+		
+		$(function(){
+			$("#searchPoll").keyup(function(){
+				var value = $(this).val().toLowerCase()
+				$(".container.polls .question").filter(function(){
+					$(this).parent().parent().toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				})
+			});
+		});
+
+	</script>
+
+	<div class="container mt-2">
+
+		
+		{% if questions %}
+			{% for question in questions %}
+				<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded ">
+					<div class="poll-header p-2 rounded-top">
+						<h4 class="question">{{ question.question_text }}</h4>
+					</div>
+					<div class="poll-body pt-3 {% if question.id in votedQuestionID %}pl-2 pr-2{% endif %}">
+						{% if question.id not in votedQuestionID %}
+							<ul>
+								{% for choice in question.choices_set.all %}
+									<li class="choice__li " data-id="{{ choice.id }}" question-id="{{ question.id }}" onclick="vote(this)">
+										<p>{{ choice.choice }}</p>
+									</li>
+								{% endfor %}
+							</ul>
+						{% else %}
+							<p class="p-2 mb-1 text-center text-muted"><mark>You already voted</mark></p>
+							{% for choice in question.choices_set.all %}
+								<div class="container poll-result rounded d-flex flex-column p-2 mb-3 shadow-sm">
+									<div class="d-flex justify-content-between">
+										<h5>{{ choice.choice }}</h5>
+										<h5 class="text-muted ml-2">{{ choice.votePercentage }}%</h5>
+									</div>
+									<div class="progress" style="height: 7px">
+									  	<div class="progress-bar bg-info" role="progressbar" style="width: {{ choice.votePercentage  }}%" aria-valuenow="{{ choice.votePercentage  }}" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<p class="text-muted font-weight-bolder">{{ choice.votes }} vote{{ choice.votes|pluralize }}</p>
+								</div>
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div class="poll-footer p-2 d-flex justify-content-between rounded-bottom">
+						<small class="{% if question.pollBy == user %}text-light{% endif %} pollByUser">{% if question.pollBy != user %}<a href="{% url 'userProfile:viewProfile' question.pollBy %}">- <b>{{ question.pollBy }}</b></a>{% else %}- <b>{{ question.pollBy }}</b>{% endif %}</small>
+						<small class="text-muted"><b>{{ question.pub_date }}</b></small>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="container polls w-screen-auto p-0 mt-5 rounded border">
+				<div class="poll-header p-2 rounded-top">
+					<h4 class="question text-center">It seems there are no Polls.</h4>
+				</div>
+			</div>
+		{% endif %}
+
+
+	</div>
+
+	<script>
+
+		function vote(this_obj) {
+			choice_id = this_obj.getAttribute('data-id');
+			question_id = this_obj .getAttribute('question-id');
+			$.ajax({
+				type:'GET',
+				url:"{% url 'home:vote' %}",
+				data: {
+					'choice_id':choice_id
+				},
+				success:function(json) {
+					if(!json.alreadyVoted) {
+						if(json.successfull) {
+							//alert("Successfully voted");
+							$(this_obj).addClass("choice__isVoted");
+							$(this_obj).parent().css('pointer-events','none');
+
+							var result_div = document.createElement("div");
+							var result_form = document.createElement("form");
+							var result_btn = document.createElement("button");
+							var result_btn_text = document.createTextNode("View Results");
+
+							result_div.className = "text-center mb-1";
+
+							result_form.action = "{% url 'home:home' %}";
+							result_form.method = "get"
+
+							result_btn.type = "submit";
+							result_btn.className = "btn btn-info";
+							result_btn.name = "resultBtn";
+							result_btn.value = question_id;
+
+							result_btn.appendChild(result_btn_text);
+							result_form.appendChild(result_btn);
+							result_div.appendChild(result_form);
+
+							$(this_obj).parent("ul").after(result_div);
+						}
+						else {
+							alert("Something went wrong");
+						}
+					}
+					else {
+						$("#message-modal #message").html("You already have voted. Refresh this page to apply changes");
+						$("#message-modal").modal("show");
+					}
+				}
+			});
+		}
+
+	</script>
+
+	<div class="modal modal-fade" id="message-modal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="d-flex justify-content-between">
+		              <h5 style="font-family:calibri" id="message"></h5>
+		              <button type="button" class="close" onfocus="this.style.outline='none'" data-dismiss="modal" aria-label="Close">
+		                <span aria-hidden="true">&times;</span>
+		              </button>
+		            </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock content %}
+
+<!--
+
+color pallete url - https://colorhunt.co/palette/163855
+
+-->
+
+<!--
+
+<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded border">
+			<div class="poll-header p-2 rounded-top">
+				<h4 class="question">If age is only a state of mind, which category best describes your state of mind right now?</h4>
+			</div>
+			<div class="poll-body pt-3">
+				<ul>
+					<li class="choice__li " data-id="2" onclick="vote(this)">
+						<p>Cheeky child</p>
+					</li>
+					<li class="choice__li " data-id="1" onclick="vote(this)">
+						<p>Tormented teenager</p>
+					</li>
+					<li class="choice__li choice__isVoted" data-id="4" onclick="vote(this)">
+						<p>Mad mid-lifer</p>
+					</li>
+					<li class="choice__li disable" data-id="3" onclick="vote(this)">
+						<p>Groovy grandparent</p>
+					</li>
+				</ul>
+			</div>
+			<div class="poll-footer p-2 d-flex justify-content-between rounded-bottom">
+				<small><a href="#">- <b>mohitkumar</b></a></small>
+				<small class="text-muted"><b>Dec, 27</b></small>
+			</div>
+		</div>
+
+-->
