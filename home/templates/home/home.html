@@ -1,17 +1,13 @@
-
 {%  extends 'user/base.html' %}
-
 {% load static %}
 
 {% block title %}
-	
 	<title>Home - QuickPoll</title>
-
 {% endblock title %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="/static/user/css/style.css?{% now 'U' %}">
-	<link rel="stylesheet" type="text/css" href="/static/user/css/home-style.css?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/home-style.css' %}?{% now 'U' %}">
 {% endblock style %}
 
 {% block header %}
@@ -32,22 +28,7 @@
 		</div>
 	</div>
 
-	<script>
-		
-		$(function(){
-			$("#searchPoll").keyup(function(){
-				var value = $(this).val().toLowerCase()
-				$(".container.polls .question").filter(function(){
-					$(this).parent().parent().toggle($(this).text().toLowerCase().indexOf(value) > -1)
-				})
-			});
-		});
-
-	</script>
-
-	<div class="container mt-2">
-
-		
+	<div class="container mt-2 choice-container">		
 		{% if questions %}
 			{% for question in questions %}
 				<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded ">
@@ -58,7 +39,7 @@
 						{% if question.id not in votedQuestionID %}
 							<ul>
 								{% for choice in question.choices_set.all %}
-									<li class="choice__li " data-id="{{ choice.id }}" question-id="{{ question.id }}" onclick="vote(this)">
+									<li class="choice__li " data-id="{{ choice.id }}" question-id="{{ question.id }}">
 										<p>{{ choice.choice }}</p>
 									</li>
 								{% endfor %}
@@ -92,62 +73,7 @@
 				</div>
 			</div>
 		{% endif %}
-
-
 	</div>
-
-	<script>
-
-		function vote(this_obj) {
-			choice_id = this_obj.getAttribute('data-id');
-			question_id = this_obj .getAttribute('question-id');
-			$.ajax({
-				type:'GET',
-				url:"{% url 'home:vote' %}",
-				data: {
-					'choice_id':choice_id
-				},
-				success:function(json) {
-					if(!json.alreadyVoted) {
-						if(json.successfull) {
-							//alert("Successfully voted");
-							$(this_obj).addClass("choice__isVoted");
-							$(this_obj).parent().css('pointer-events','none');
-
-							var result_div = document.createElement("div");
-							var result_form = document.createElement("form");
-							var result_btn = document.createElement("button");
-							var result_btn_text = document.createTextNode("View Results");
-
-							result_div.className = "text-center mb-1";
-
-							result_form.action = "{% url 'home:home' %}";
-							result_form.method = "get"
-
-							result_btn.type = "submit";
-							result_btn.className = "btn btn-info";
-							result_btn.name = "resultBtn";
-							result_btn.value = question_id;
-
-							result_btn.appendChild(result_btn_text);
-							result_form.appendChild(result_btn);
-							result_div.appendChild(result_form);
-
-							$(this_obj).parent("ul").after(result_div);
-						}
-						else {
-							alert("Something went wrong");
-						}
-					}
-					else {
-						$("#message-modal #message").html("You already have voted. Refresh this page to apply changes");
-						$("#message-modal").modal("show");
-					}
-				}
-			});
-		}
-
-	</script>
 
 	<div class="modal modal-fade" id="message-modal">
 		<div class="modal-dialog modal-dialog-centered">
@@ -166,38 +92,7 @@
 
 {% endblock content %}
 
-<!--
-
-color pallete url - https://colorhunt.co/palette/163855
-
--->
-
-<!--
-
-<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded border">
-			<div class="poll-header p-2 rounded-top">
-				<h4 class="question">If age is only a state of mind, which category best describes your state of mind right now?</h4>
-			</div>
-			<div class="poll-body pt-3">
-				<ul>
-					<li class="choice__li " data-id="2" onclick="vote(this)">
-						<p>Cheeky child</p>
-					</li>
-					<li class="choice__li " data-id="1" onclick="vote(this)">
-						<p>Tormented teenager</p>
-					</li>
-					<li class="choice__li choice__isVoted" data-id="4" onclick="vote(this)">
-						<p>Mad mid-lifer</p>
-					</li>
-					<li class="choice__li disable" data-id="3" onclick="vote(this)">
-						<p>Groovy grandparent</p>
-					</li>
-				</ul>
-			</div>
-			<div class="poll-footer p-2 d-flex justify-content-between rounded-bottom">
-				<small><a href="#">- <b>mohitkumar</b></a></small>
-				<small class="text-muted"><b>Dec, 27</b></small>
-			</div>
-		</div>
-
--->
+{% block script %}
+	<script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/vote.js' %}"></script>
+{% endblock script %}

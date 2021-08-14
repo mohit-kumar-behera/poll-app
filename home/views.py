@@ -71,7 +71,7 @@ def vote(request):
 
 def result(request):
 	try:
-		question_id = request.session['sessQID'];
+		question_id = request.session['sessQID']
 		question = Question.objects.get(id=question_id)
 	except Question.DoesNotExist:
 		return HttpResponse(reverse("home:home"))
