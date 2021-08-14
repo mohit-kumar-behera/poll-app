@@ -1,12 +1,8 @@
-
 {%  extends 'user/base.html' %}
-
 {% load static %}
 
 {% block title %}
-	
 	<title>Create Poll - QuickPoll</title>
-
 {% endblock title %}
 
 {% block style %}
@@ -31,79 +27,39 @@
 	</div>
 
 	<div class="container text-center question-form-container mt-5 mb-5 w-screen-auto p-2" style="height:auto">
-
-		<h3 style="font-family:calibri">Create your Poll and share it to the public</h3>
-		
+		<h3 style="font-family:calibri">Create your Poll and share it to the public</h3>	
 		<form action="{% url 'createPoll:createPoll' %}" method="post" class="pollForm">
-
 			{% csrf_token %}
-		  
 		  <div class="form-group">
 		    <textarea class="form-control question" rows=5 placeholder="*  Ask your Question here" name="question" required></textarea>
 		  </div>
-		  
 		  <div class="form-group">
 		    <input type="text" class="form-control choice" placeholder="*  Enter Your Choice 1" name="choice_1" required autocomplete="off">
 		  </div>
-
 		  <div class="form-group">
 		    <input type="text" class="form-control choice" placeholder="*  Enter Your Choice 2" name="choice_2" required autocomplete="off">
 		  </div>
-
 		  <div class="form-group">
 		    <input type="text" class="form-control choice" placeholder="Enter Your Choice 3" name="choice_3" autocomplete="off">
 		  </div>
-
 		  <div class="form-group">
 		    <input type="text" class="form-control choice" placeholder="Enter Your Choice 4" name="choice_4" autocomplete="off">
-		  </div>
-		  
+		  </div>	  
 		  <div class="form-group-btn">
 		  	<button type="button" class="btn float-left w-40 sky-blue-bg text-dark" id="addChoice">Add Choice</button>
 		  	<button type="submit" class="btn main-theme-bg w-40 float-right text-light" id="submitPoll" name="submitPoll">Submit</button>
 		  </div>
-
 		</form>
-
 	</div>
 
-
 	<script>
-
 		setTimeout(function(){
 			$(".loader").hide(650);
 			$(".question-form-container").fadeIn(600);
 		},200);
-
 	</script>
-
-	<script>
-
-		var addChoiceBtn = document.getElementById("addChoice");
-		var pollForm = document.getElementsByClassName("pollForm")[0];
-		var choicesElem = document.getElementsByClassName("choice");
-		var len_choicesElem = choicesElem.length;
-		addChoice.onclick = function() {
-			len_choicesElem += 1; 
-			var divElem = document.createElement("div");
-			divElem.className = "form-group";
-			var inputElem = document.createElement("input");
-			inputElem.type = "text";
-			inputElem.className = "form-control choice";
-			inputElem.placeholder = "Enter Your Choice " + len_choicesElem;
-			inputElem.name = "choice_" + len_choicesElem;
-			inputElem.autocomplete = "off";
-			divElem.appendChild(inputElem)
-			$(".form-group:last").after(divElem);
-		}
-
-	</script>
-
-
 {% endblock content %}
 
-<!--
-
-color pallete url - https://colorhunt.co/palette/163855
-
--->
+{% block script %}
+	<script type="text/javascript" src="{% static 'js/addForm.js' %}"></script>
+{% endblock script %}
