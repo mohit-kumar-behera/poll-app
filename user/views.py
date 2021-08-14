@@ -44,9 +44,9 @@ def user(request):
 def usernameExist(request):
 	if request.GET:
 		data = {'successfull':True}
-		_username = request.GET.get("_username")
+		username = request.GET.get("username")
 		try:
-			username_qs = quickPollUser.objects.filter(username=_username)
+			username_qs = quickPollUser.objects.filter(username=username)
 		except:
 			pass
 		else:

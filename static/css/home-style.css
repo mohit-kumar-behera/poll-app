@@ -1,0 +1,68 @@
+
+#searchPoll {
+	border:1.3px solid #272343;
+	box-shadow:1px 2px 5px #27234399;
+}
+#searchPoll:focus {
+	border-color:#bae8e8;
+}
+
+
+.polls.container {
+	box-shadow:1px 1.4px 5px #272343;
+}
+
+/*POLL HEADER*/
+.poll-header {
+	background-image:linear-gradient(35deg , #bae8e8 50% , #e3f6f5 50%);
+}
+
+
+/*POLL BODY*/
+.poll-body {
+	background:#fff;
+}
+.poll-body > ul {
+	padding:0;
+	list-style-type:none;
+}
+
+.poll-body > ul li {
+  background:#fff;
+  cursor:pointer;
+  font-size:1.1rem;
+  padding:2%;
+}
+.poll-body .choice__li:hover {
+	background:#e3f6f5;
+}
+.poll-body .choice__li.choice__isVoted {
+	background:#bae8e8;
+}
+.poll-body .result-link {
+	color:#272343;
+}
+
+
+/*POLL FOOTER*/
+.poll-footer {
+	background:#272343;
+}
+.poll-footer a {
+	color:#e3f6f5;
+}
+.poll-footer a:hover {
+	color:#bae8e8;
+	text-decoration:none;
+}
+
+
+/*RESULT PAGE*/
+
+.poll-result.container {
+	border:0.8px solid #bae8e8;
+}
+
+.poll-result.container:hover {
+	border:1px solid #272343;
+}

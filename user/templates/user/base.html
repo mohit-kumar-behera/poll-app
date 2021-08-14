@@ -20,31 +20,21 @@
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-  {% block style %}
-  {% endblock style %}
+  {% block style %}  {% endblock style %}
 
 </head>
 
 <body>
+  {% block header %}  {% endblock header %}
 
-  {% block header %}
-  
-  {% endblock header %}
+	{% block content %}	{% endblock content %}
 
-
-	{% block content %}
-
-
-	{% endblock content %}
-
-    <!-- Footer -->
-
+  <!-- Footer -->
   <footer id="footer" class="text-center m-5">
-
     <small class="text-muted" style="font-family:calibri">© Copyright 2020 QuickPoll </small>
-
   </footer>
 
+  {% block script %}	{% endblock script %}
 
 </body>
 </html>

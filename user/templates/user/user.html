@@ -1,16 +1,12 @@
-
 {%  extends 'user/base.html' %}
-
 {% load static %}
 
 {% block title %}
-	
 	<title>Login - QuickPoll</title>
-
 {% endblock title %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="/static/user/css/style.css?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{% now 'U' %}">
 {% endblock style %}
 
 {% block header %}
@@ -20,8 +16,6 @@
 {% endblock header %}
 
 {% block content %}
-
-
 	<div class="container mt-5">
 		<div class="row">
 			<div class="col-lg-6 col-md-6 mt-4">
@@ -66,9 +60,9 @@
 		</div>
 	</div>
 
-	<script>
+	<!-- <script>
 		var username=document.getElementById("c-username"),usernameHelp=document.getElementById("usernameHelp"),accountCreateBtn=document.getElementsByClassName("ac-create")[0];username.onkeyup=function(){var e=this.value;e.length>0&&e.length<21?$.ajax({type:"GET",url:"{% url 'user:usernameExist' %}",data:{_username:e},success:function(a){username_regex=/[!@#$%^&*:;,.?()-=+?><~`]/,a.successfull?1==e.split(" ").length?e.match(username_regex)?(usernameHelp.innerHTML="<span class='text-danger'>There can be no Special Characters</span>",username.style.borderColor="red",username.style.boxShadow="0 0 2px red",accountCreateBtn.setAttribute("disabled",!0)):a.can_be_taken?(usernameHelp.innerHTML="<span class='text-success'>Username can be taken</span>",username.style.borderColor="green",username.style.boxShadow="0 0 4px lightgreen",accountCreateBtn.removeAttribute("disabled")):(usernameHelp.innerHTML="<span class='text-danger'>Username is already taken</span>",username.style.borderColor="red",username.style.boxShadow="0 0 2px red",accountCreateBtn.setAttribute("disabled",!0)):(usernameHelp.innerHTML="<span class='text-danger'>There should be no whitespace between username</span>",username.style.borderColor="red",username.style.boxShadow="0 0 2px red",accountCreateBtn.setAttribute("disabled",!0)):alert("Something went wrong")}}):e.length>=21?(usernameHelp.innerHTML="<span class='text-danger'>Username can't be more than 20 characters</span>",this.style.borderColor="red",this.style.boxShadow="0 0 2px red"):(usernameHelp.innerHTML="<span class='text-muted'>Username can't be left empty</span>",this.style.borderColor="grey",this.style.boxShadow="0 0 2px grey")};
-	</script>
+	</script> -->
 
 	{% if message %}
     <!-- Popop Model for Warning or any Message -->
@@ -99,8 +93,6 @@
 
 {% endblock content %}
 
-<!--
-
-color pallete url - https://colorhunt.co/palette/163855
-
--->
+{% block script %}
+	<script type="text/javascript" src="{% static 'js/verifyUsername.js' %}"></script>
+{% endblock script %}
