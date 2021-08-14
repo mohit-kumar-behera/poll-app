@@ -28,7 +28,7 @@ textarea[name="question"] {
 	border-color:#272343;
 }
 input.choice {
-	border-color:#17A2B8;
+	border-color:#27234385;
 }
 .question-form-container button[type="submit"]:hover {
 	background:#322d56; 
@@ -38,7 +38,7 @@ input.choice {
 }
 
 input[type="text"]::placeholder {
-	color:#bae8e8;
+	color:#27234385;
 }
 
 input[type="text"]:focus {

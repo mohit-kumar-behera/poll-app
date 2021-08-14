@@ -10,8 +10,8 @@
 {% endblock title %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="/static/user/css/style.css?{% now 'U' %}">
-	<link rel="stylesheet" type="text/css" href="/static/user/css/create-poll.css?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/create-poll.css' %}?{% now 'U' %}">
 {% endblock style %}
 
 {% block header %}
