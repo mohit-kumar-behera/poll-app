@@ -1,17 +1,14 @@
 {%  extends 'user/base.html' %}
-
 {% load static %}
 
 {% block title %}
-	
 	<title>mohitkumar - QuickPoll</title>
-
 {% endblock title %}
 
 {% block style %}
-	<link rel="stylesheet" type="text/css" href="/static/user/css/style.css?{% now 'U' %}">
-	<link rel="stylesheet" type="text/css" href="/static/user/css/profile.css?{% now 'U' %}">
-	<link rel="stylesheet" type="text/css" href="/static/user/css/home-style.css?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/profile.css' %}?{% now 'U' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/home-style.css' %}?{% now 'U' %}">
 {% endblock style %}
 
 {% block header %}
@@ -24,9 +21,7 @@
 	</div>
 {% endblock header %}
 
-
 {% block content %}
-
 	<div class="container-fluid mt-2 wider-padding" style="background:#bae8e8">
 		<div class="d-flex justify-content-around">
 			<div class="main-theme-color">
@@ -41,40 +36,38 @@
 			</div>
 		</div>
 	</div>
-
-		{% if userPoll %}
-			{% for question in userPoll %}
-				<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded ">
-					<div class="poll-header p-2 rounded-top">
-						<h4 class="question">{{ question.question_text }}</h4>
-					</div>
-					<div class="poll-body pt-3 p-2 {% if question.id in votedQuestionID %}pl-2 pr-2{% endif %}">
-						{% for choice in question.choices_set.all %}
-							<div class="container poll-result rounded d-flex flex-column p-2 mb-3 shadow-sm">
-								<div class="d-flex justify-content-between">
-									<h5>{{ choice.choice }}</h5>
-									<h5 class="text-muted ml-2">{{ choice.votePercentage }}%</h5>
-								</div>
-								<div class="progress" style="height: 7px">
-								  	<div class="progress-bar bg-info" role="progressbar" style="width: {{ choice.votePercentage  }}%" aria-valuenow="{{ choice.votePercentage  }}" aria-valuemin="0" aria-valuemax="100"></div>
-								</div>
-								<p class="text-muted font-weight-bolder">{{ choice.votes }} vote{{ choice.votes|pluralize }}</p>
-							</div>
-						{% endfor %}
-					</div>
-					<div class="poll-footer p-2 d-flex justify-content-between rounded-bottom">
-						<small class="text-light">- <b>{{ question.pollBy }}</b></small>
-						<small class="text-muted"><b>{{ question.pub_date }}</b></small>
-					</div>
-				</div>
-			{% endfor %}
-		{% else %}
-			<div class="container polls w-screen-auto p-0 mt-5 rounded border">
+	{% if userPoll %}
+		{% for question in userPoll %}
+			<div class="container polls w-screen-auto p-0 bg-light mt-5 rounded ">
 				<div class="poll-header p-2 rounded-top">
-					<h4 class="question text-center">You have not created any Polls yet. Click on Create Poll button to create a new Poll</h4>
+					<h4 class="question">{{ question.question_text }}</h4>
+				</div>
+				<div class="poll-body pt-3 p-2 {% if question.id in votedQuestionID %}pl-2 pr-2{% endif %}">
+					{% for choice in question.choices_set.all %}
+						<div class="container poll-result rounded d-flex flex-column p-2 mb-3 shadow-sm">
+							<div class="d-flex justify-content-between">
+								<h5>{{ choice.choice }}</h5>
+								<h5 class="text-muted ml-2">{{ choice.votePercentage }}%</h5>
+							</div>
+							<div class="progress" style="height: 7px">
+								<div class="progress-bar bg-info" role="progressbar" style="width: {{ choice.votePercentage  }}%" aria-valuenow="{{ choice.votePercentage  }}" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
+							<p class="text-muted font-weight-bolder">{{ choice.votes }} vote{{ choice.votes|pluralize }}</p>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="poll-footer p-2 d-flex justify-content-between rounded-bottom">
+					<small class="text-light">- <b>{{ question.pollBy }}</b></small>
+					<small class="text-muted"><b>{{ question.pub_date }}</b></small>
 				</div>
 			</div>
-		{% endif %}
-
+		{% endfor %}
+	{% else %}
+		<div class="container polls w-screen-auto p-0 mt-5 rounded border">
+			<div class="poll-header p-2 rounded-top">
+				<h4 class="question text-center">You have not created any Polls yet. Click on Create Poll button to create a new Poll</h4>
+			</div>
+		</div>
+	{% endif %}
 
 {% endblock content %}
